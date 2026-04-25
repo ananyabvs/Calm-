@@ -1,0 +1,1370 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#6f7f73" />
+  <meta name="description" content="A free, research-backed mental wellness micro-intervention designed for global access." />
+
+  <title>Moody — a small reset</title>
+
+  <!-- Google Fonts (allowed external dependency) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Playfair+Display:wght@600;700&family=Caveat:wght@500;600&display=swap" rel="stylesheet" />
+
+  <!-- Plausible Analytics (optional; enable once you have a domain) -->
+  <!-- REPLACE: yourdomain.com with your real domain (or keep this commented out for now) -->
+  <!--
+  <script defer data-domain="yourdomain.com" src="https://plausible.io/js/script.js"></script>
+  -->
+
+  <style>
+    :root{
+      --bg: #f6f0e7;         /* warm cream */
+      --panel: #fbf7f0;
+      --ink: #2b2a28;
+      --muted: #5b5a56;
+      --sage: #6f7f73;
+      --mauve: #9b7b86;
+      --peach: #e6b9a7;
+      --line: rgba(43,42,40,.14);
+      --shadow: 0 10px 30px rgba(43,42,40,.08);
+      --radius: 18px;
+      --focus: 0 0 0 3px rgba(111,127,115,.32);
+      --max: 980px;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:"DM Sans",system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      color:var(--ink);
+      background:
+        radial-gradient(1200px 700px at 20% 0%, rgba(155,123,134,.18), transparent 55%),
+        radial-gradient(900px 700px at 90% 10%, rgba(111,127,115,.16), transparent 55%),
+        radial-gradient(1200px 800px at 40% 100%, rgba(230,185,167,.14), transparent 60%),
+        var(--bg);
+      line-height:1.5;
+    }
+
+    a{color:inherit}
+    a:focus-visible, button:focus-visible, select:focus-visible, textarea:focus-visible, input:focus-visible{
+      outline:none;
+      box-shadow: var(--focus);
+      border-color: rgba(111,127,115,.55);
+    }
+
+    header{
+      position:sticky;
+      top:0;
+      z-index:50;
+      background: rgba(246,240,231,.72);
+      backdrop-filter: blur(10px);
+      border-bottom:1px solid var(--line);
+    }
+    .wrap{max-width:var(--max); margin:0 auto; padding:16px 16px;}
+    .topbar{display:flex; align-items:center; gap:12px; justify-content:space-between;}
+    .brand{display:flex; align-items:baseline; gap:10px;}
+    .brand h1{margin:0; font-family:"Playfair Display",serif; font-weight:700; font-size:18px; letter-spacing:.2px}
+    .badge{
+      font-size:12px; color:var(--muted);
+      border:1px solid var(--line);
+      padding:4px 10px; border-radius:999px;
+      background:rgba(251,247,240,.85);
+    }
+    .controls{display:flex; align-items:center; gap:10px;}
+    .lang{
+      display:flex; align-items:center; gap:8px;
+      padding:8px 10px;
+      border:1px solid var(--line);
+      border-radius:999px;
+      background: rgba(251,247,240,.85);
+    }
+    .lang label{font-size:12px; color:var(--muted)}
+    .lang select{
+      border:none; background:transparent; font:inherit;
+      padding:0; margin:0; color:var(--ink);
+    }
+
+    main{padding:18px 0 40px}
+    h2{
+      font-family:"Playfair Display",serif;
+      font-size:24px; margin:0 0 8px;
+      letter-spacing:.2px;
+    }
+    h3{margin:0 0 8px; font-size:16px}
+    p{margin:0 0 12px; color:var(--muted)}
+    .grid{display:grid; gap:14px}
+    @media (min-width: 900px){
+      .grid.cols-2{grid-template-columns: 1.2fr .8fr}
+      .grid.cols-3{grid-template-columns: 1fr 1fr 1fr}
+    }
+
+    .card{
+      background: rgba(251,247,240,.9);
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding:16px;
+    }
+    .card.soft{
+      background: linear-gradient(180deg, rgba(251,247,240,.95), rgba(251,247,240,.84));
+    }
+    .btnrow{display:flex; gap:10px; flex-wrap:wrap; margin-top:10px}
+    button, .btn{
+      appearance:none; border:1px solid var(--line);
+      background: rgba(255,255,255,.5);
+      color:var(--ink);
+      border-radius: 999px;
+      padding:10px 12px;
+      font:inherit;
+      cursor:pointer;
+      transition: transform .08s ease, background .2s ease;
+      text-decoration:none;
+      display:inline-flex; align-items:center; gap:8px;
+    }
+    button:hover,.btn:hover{background: rgba(255,255,255,.7)}
+    button:active,.btn:active{transform: translateY(1px)}
+    .primary{
+      border-color: rgba(111,127,115,.35);
+      background: rgba(111,127,115,.12);
+    }
+
+    /* Hero */
+    .hero{padding:18px 0 6px;}
+    .heroCard{
+      padding:18px;
+      background:
+        radial-gradient(1000px 400px at 0% 0%, rgba(111,127,115,.13), transparent 55%),
+        radial-gradient(800px 500px at 100% 0%, rgba(155,123,134,.14), transparent 55%),
+        rgba(251,247,240,.92);
+    }
+    .heroTitle{
+      margin:0 0 8px;
+      font-family:"Playfair Display",serif;
+      font-size:34px;
+      line-height:1.12;
+    }
+    .heroSub{font-size:15px; max-width:70ch}
+    .pillRow{display:flex; flex-wrap:wrap; gap:8px; margin-top:10px}
+    .pill{
+      font-size:12px; color:var(--muted);
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.5);
+      padding:6px 10px; border-radius:999px;
+    }
+
+    /* Fade-in on scroll */
+    .reveal{opacity:0; transform: translateY(10px); transition: opacity .6s ease, transform .6s ease;}
+    .reveal.in{opacity:1; transform:none;}
+
+    /* Why this works */
+    details{
+      border:1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(255,255,255,.45);
+      padding:10px 12px;
+    }
+    summary{cursor:pointer; font-weight:600;}
+    .cite{display:block; margin-top:6px; font-size:13px; color:var(--muted);}
+
+    /* Breathing */
+    .breath{display:grid; gap:12px; align-items:center; grid-template-columns: 1fr;}
+    @media (min-width: 520px){ .breath{grid-template-columns: 200px 1fr} }
+    .breathViz{width:180px; height:180px; margin:0 auto; position:relative;}
+    .breathViz svg{width:100%; height:100%}
+    .square{
+      fill:none;
+      stroke: rgba(111,127,115,.55);
+      stroke-width:10;
+      stroke-linecap:round;
+      stroke-dasharray: 320;
+      stroke-dashoffset: 320;
+      filter: drop-shadow(0 10px 18px rgba(43,42,40,.08));
+    }
+    .square.track{stroke: rgba(43,42,40,.10); stroke-dasharray:none; stroke-dashoffset:0}
+    .square.anim{animation: boxTrace 16s linear infinite; animation-play-state: paused;}
+    @keyframes boxTrace{
+      0%   {stroke-dashoffset: 320;}
+      25%  {stroke-dashoffset: 240;}
+      25.01% {stroke-dashoffset: 240;}
+      50%  {stroke-dashoffset: 160;}
+      50.01% {stroke-dashoffset: 160;}
+      75%  {stroke-dashoffset: 80;}
+      75.01% {stroke-dashoffset: 80;}
+      100% {stroke-dashoffset: 0;}
+    }
+    .breathCenter{
+      position:absolute; inset:0;
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      text-align:center;
+      gap:2px;
+      pointer-events:none;
+    }
+    .phase{font-weight:700}
+    .count{font-size:22px; font-weight:800; color:var(--sage)}
+    .breathHint{font-size:12px; color:var(--muted)}
+    .kpiRow{display:flex; gap:10px; flex-wrap:wrap; margin-top:6px}
+    .kpi{font-size:12px; color:var(--muted); border:1px dashed rgba(43,42,40,.18); border-radius:999px; padding:6px 10px; background:rgba(255,255,255,.35)}
+
+    /* Journaling */
+    textarea{
+      width:100%;
+      min-height: 140px;
+      border:1px solid var(--line);
+      border-radius: 14px;
+      padding:12px;
+      font:inherit;
+      resize: vertical;
+      background: rgba(255,255,255,.5);
+    }
+    .note{font-size:12px; color:var(--muted); margin-top:8px;}
+
+    /* Carousel */
+    .carousel{display:grid; gap:10px;}
+    .carouselMain{
+      padding:14px;
+      border-radius: 16px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.5);
+      min-height: 84px;
+      display:flex; align-items:center;
+      position:relative;
+    }
+    .carouselText{font-size:16px; font-weight:600}
+    .carouselMeta{font-size:12px; color:var(--muted); margin-top:6px}
+    .carControls{display:flex; gap:10px; align-items:center; flex-wrap:wrap}
+    .small{font-size:12px; color:var(--muted)}
+
+    /* Humans */
+    .humansWrap{
+      background:
+        radial-gradient(900px 480px at 15% 0%, rgba(230,185,167,.18), transparent 60%),
+        radial-gradient(800px 520px at 100% 30%, rgba(155,123,134,.16), transparent 60%),
+        rgba(251,247,240,.92);
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding:16px;
+    }
+    .humanCard{
+      border-radius: 18px;
+      border:1px solid rgba(43,42,40,.12);
+      background: rgba(255,255,255,.55);
+      padding:14px;
+      box-shadow: 0 10px 26px rgba(43,42,40,.08);
+      position:relative;
+      overflow:hidden;
+    }
+    .humanCard::before{
+      content:"";
+      position:absolute; inset:-40px -40px auto auto;
+      width:140px; height:140px;
+      background: radial-gradient(circle at 30% 30%, rgba(230,185,167,.55), transparent 60%);
+      transform: rotate(12deg);
+      pointer-events:none;
+    }
+    .humanMsg{
+      font-family:"Caveat",cursive;
+      font-size:22px;
+      line-height:1.15;
+      color: rgba(43,42,40,.92);
+    }
+    .humanFrom{margin-top:10px; font-size:12px; color:var(--muted)}
+    .humanControls{display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-top:10px}
+
+    /* Resources */
+    .regionGrid{display:grid; gap:12px}
+    @media (min-width: 900px){ .regionGrid{grid-template-columns: 1fr 1fr} }
+    ul{margin:10px 0 0; padding-left: 18px; color:var(--muted)}
+    li{margin:6px 0}
+
+    /* Timer */
+    .timer{
+      position: fixed;
+      right: 12px;
+      bottom: 12px;
+      z-index: 60;
+      font-size: 12px;
+      color:var(--muted);
+      background: rgba(251,247,240,.88);
+      border:1px solid var(--line);
+      border-radius: 999px;
+      padding: 8px 10px;
+      box-shadow: 0 10px 24px rgba(43,42,40,.08);
+      user-select:none;
+    }
+
+    /* Consent banner */
+    .consent{
+      position:fixed;
+      left:12px; right:12px;
+      bottom: 56px;
+      z-index: 70;
+      display:none;
+      background: rgba(251,247,240,.94);
+      border:1px solid var(--line);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      padding: 12px;
+      gap:10px;
+      align-items:center;
+    }
+    .consent p{margin:0; font-size:12px; color:var(--muted)}
+    .consent .row{display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between}
+
+    footer{
+      border-top:1px solid var(--line);
+      margin-top:18px;
+      padding-top:16px;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    /* Install prompt */
+    .install{
+      display:none;
+      border:1px solid rgba(155,123,134,.28);
+      background: rgba(155,123,134,.10);
+      border-radius: 14px;
+      padding:12px;
+      gap:10px;
+      align-items:center;
+      justify-content:space-between;
+      margin-top:12px;
+    }
+    .install strong{color: rgba(43,42,40,.92)}
+
+    /* Survey button + drawer (bottom corner) */
+    .surveyFab{
+      position:fixed;
+      left: 12px;
+      bottom: 12px;
+      z-index: 80;
+      border-radius: 999px;
+      box-shadow: 0 16px 40px rgba(43,42,40,.14);
+      border-color: rgba(155,123,134,.35);
+      background: rgba(155,123,134,.14);
+    }
+    .drawerBackdrop{
+      position:fixed; inset:0;
+      background: rgba(0,0,0,.18);
+      z-index: 90;
+      display:none;
+    }
+    .drawer{
+      position:fixed;
+      left: 10px; right: 10px;
+      bottom: 10px;
+      z-index: 100;
+      display:none;
+      border-radius: 18px;
+      border:1px solid var(--line);
+      box-shadow: 0 20px 60px rgba(43,42,40,.20);
+      background: rgba(251,247,240,.96);
+      max-width: 820px;
+      margin: 0 auto;
+      overflow:hidden;
+    }
+    .drawerHeader{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255,255,255,.45);
+    }
+    .drawerHeader strong{font-family:"Playfair Display",serif}
+    .drawerBody{height: min(70vh, 620px); }
+    .drawerBody iframe{
+      width:100%;
+      height:100%;
+      border:0;
+      background: white;
+    }
+
+    .sr-only{
+      position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden;
+      clip:rect(0,0,0,0); white-space:nowrap; border:0;
+    }
+  </style>
+
+  <!-- PWA Manifest as a data URL (single-file friendly) -->
+  <link rel="manifest" id="manifestLink" href="" />
+
+<script defer src="https://cloud.umami.is/script.js" 
+data-website-id="250b9719-676a-4fd9-b8be-6faefec1df3c">
+</script>
+</head>
+
+<body>
+<header role="banner" aria-label="Page header">
+  <div class="wrap topbar">
+    <div class="brand" aria-label="Site branding">
+      <h1>Moody</h1>
+      <span class="badge" id="tagline">a small reset</span>
+    </div>
+
+    <div class="controls" aria-label="Header controls">
+      <div class="lang" role="group" aria-label="Language selection">
+        <label for="langSel" id="langLabel">Language</label>
+        <select id="langSel" aria-label="Language">
+          <option value="en" selected>English</option>
+          <option value="es">Español</option>
+          <option value="fr">Français</option>
+          <option value="pt">Português</option>
+          <option value="ar">العربية</option>
+          <option value="hi">हिन्दी</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap" id="main" role="main">
+  <section class="hero reveal" aria-label="Hero">
+    <div class="card heroCard">
+      <h2 class="heroTitle" data-i18n="hero.title">Welcome home to this safe space</h2>
+      <p class="heroSub" data-i18n="hero.subtitle">
+        If today feels heavy, you don’t have to carry it alone. Take one minute—breathe, write, read something kind, and leave with a little more steadiness.
+      </p>
+
+      <div class="pillRow" aria-label="Key notes">
+        <span class="pill" data-i18n="hero.pill1">No account</span>
+        <span class="pill" data-i18n="hero.pill2">Mobile-friendly</span>
+        <span class="pill" data-i18n="hero.pill3">Offline-ready</span>
+        <span class="pill" data-i18n="hero.pill4">Science-backed</span>
+      </div>
+
+      <div class="btnrow" aria-label="Quick actions">
+        <a class="btn primary" href="#breathing" data-i18n="hero.cta1">Start with breathing</a>
+        <a class="btn" href="#journaling" data-i18n="hero.cta2">Write for 2 minutes</a>
+        <a class="btn" href="#humans" data-i18n="hero.cta3">Read human words</a>
+      </div>
+
+      <div style="margin-top:12px">
+        <details aria-label="Why this works (science)">
+          <summary data-i18n="science.title">Why this works (science)</summary>
+          <span class="cite">Mindfulness helps shift attention to the present, reducing rumination and stress responses (Kabat-Zinn, 1990).</span>
+          <span class="cite">Self-affirmation can protect a sense of self-worth during threat, improving coping and openness (Steele, 1988; Creswell et al., 2013).</span>
+          <span class="cite">Expressive writing supports emotional processing and meaning-making, which can reduce distress over time (Pennebaker, 1997).</span>
+          <span class="cite">Slow, structured breathing can influence autonomic balance and downshift physiological arousal (Zaccaro et al., 2018).</span>
+        </details>
+      </div>
+
+      <div class="install" id="installBox" role="region" aria-label="Install prompt">
+        <div>
+          <strong data-i18n="install.title">Install this page</strong>
+          <div class="small" data-i18n="install.subtitle">For quick access and offline use.</div>
+        </div>
+        <button class="primary" id="installBtn" type="button" data-i18n="install.button" aria-label="Install this page">Install</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="breathing" class="reveal" aria-label="Box breathing exercise" style="margin-top:14px">
+    <div class="card soft">
+      <h2 data-i18n="breath.title">Box breathing (4–4–4–4)</h2>
+      <p data-i18n="breath.subtitle">Breathe in for 4 seconds, hold for 4, breathe out for 4, hold for 4. Repeat for a minute.</p>
+
+      <div class="breath" aria-label="Breathing visual and controls">
+        <div class="breathViz" aria-hidden="true">
+          <svg viewBox="0 0 120 120" focusable="false">
+            <rect class="square track" x="20" y="20" width="80" height="80" rx="14"></rect>
+            <rect class="square anim" id="boxAnim" x="20" y="20" width="80" height="80" rx="14"></rect>
+          </svg>
+          <div class="breathCenter">
+            <div class="phase" id="phaseLabel" data-i18n="breath.phase.inhale">Inhale</div>
+            <div class="count" id="phaseCount">4</div>
+            <div class="breathHint" id="breathHint" data-i18n="breath.hint">Gentle shoulders. Soft jaw.</div>
+          </div>
+        </div>
+
+        <div>
+          <div class="btnrow" aria-label="Breathing controls">
+            <button class="primary" type="button" id="breathToggle" data-i18n="breath.start" aria-label="Start breathing exercise">Start</button>
+            <button type="button" id="breathReset" data-i18n="breath.reset" aria-label="Reset breathing exercise">Reset</button>
+          </div>
+
+          <div class="kpiRow" aria-label="Breathing phases">
+            <span class="kpi" data-i18n="breath.kpi.in">In 4</span>
+            <span class="kpi" data-i18n="breath.kpi.hold">Hold 4</span>
+            <span class="kpi" data-i18n="breath.kpi.out">Out 4</span>
+            <span class="kpi" data-i18n="breath.kpi.hold">Hold 4</span>
+          </div>
+
+          <p class="note" data-i18n="breath.note">If you feel lightheaded, return to normal breathing and rest.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="affirmations" class="reveal" aria-label="Affirmations" style="margin-top:14px">
+    <div class="card">
+      <h2 data-i18n="aff.title">Affirmations</h2>
+      <p data-i18n="aff.subtitle">Small, steady reminders. They rotate automatically, or you can choose.</p>
+
+      <div class="carousel" aria-label="Affirmations carousel">
+        <div class="carouselMain" role="group" aria-label="Affirmation">
+          <div>
+            <div class="carouselText" id="affText">You are still worthy, still enough.</div>
+            <div class="carouselMeta" id="affMeta">1 / 15</div>
+          </div>
+        </div>
+
+        <div class="carControls" aria-label="Affirmation controls">
+          <button type="button" id="affPrev" aria-label="Previous affirmation" data-i18n="common.prev">Previous</button>
+          <button type="button" id="affNext" aria-label="Next affirmation" data-i18n="common.next">Next</button>
+          <span class="small" data-i18n="aff.timer">Auto-rotates every 8 seconds.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="journaling" class="reveal" aria-label="Daily journaling prompt" style="margin-top:14px">
+    <div class="card soft">
+      <h2>Daily journaling prompt</h2>
+      <p id="promptText">Loading prompt…</p>
+
+      <label class="sr-only" for="journalBox">Journal writing area</label>
+      <textarea id="journalBox" placeholder="Write here..."></textarea>
+
+      <div class="note" aria-label="Privacy note">This stays on your device only.</div>
+
+      <p class="note" id="soonNote"></p>
+    </div>
+  </section>
+
+  <section id="humans" class="reveal" aria-label="Words from Humans" style="margin-top:14px">
+    <div class="humansWrap">
+      <h2 data-i18n="hum.title">Words from Humans</h2>
+      <p data-i18n="hum.subtitle">Anonymous, warm reminders—like a small hug from someone who gets it.</p>
+
+      <div class="humanCard" role="group" aria-label="Encouraging message">
+        <div class="humanMsg" id="humanMsg">Loading…</div>
+        <div class="humanFrom" id="humanFrom">— anonymous</div>
+      </div>
+
+      <div class="humanControls" aria-label="Words from Humans controls">
+        <button type="button" id="humPrev" data-i18n="common.prev" aria-label="Previous message">Previous</button>
+        <button type="button" id="humNext" data-i18n="common.next" aria-label="Next message">Next</button>
+        <a class="btn primary" href="https://forms.gle/qaQeCED45mJ1KYwU7" target="_blank" rel="noopener noreferrer" aria-label="Add your own words" data-i18n="hum.add">
+          Add your own words
+        </a>
+      </div>
+
+      <p class="note" data-i18n="hum.note">These are supportive peer-style messages, not medical advice.</p>
+    </div>
+  </section>
+
+  <section id="resources" class="reveal" aria-label="Global resources" style="margin-top:14px">
+    <div class="card">
+      <h2>Resources (global)</h2>
+      <p>If you’re in immediate danger or need urgent help, contact local emergency services.</p>
+
+      <div class="regionGrid" aria-label="Resource regions">
+        <div class="card" style="box-shadow:none; background:rgba(255,255,255,.45)">
+          <h3>GLOBAL</h3>
+          <ul>
+            <li><a href="https://www.who.int/mental-health" target="_blank" rel="noopener noreferrer">WHO Mental Health</a></li>
+            <li><a href="https://www.crisistextline.org/" target="_blank" rel="noopener noreferrer">Crisis Text Line</a> — Text HOME to 741741 (US/UK/CA/IE)</li>
+            <li><a href="https://www.iasp.info/resources/Crisis_Centres/" target="_blank" rel="noopener noreferrer">International Association for Suicide Prevention (Crisis Centres)</a></li>
+          </ul>
+        </div>
+
+        <div class="card" style="box-shadow:none; background:rgba(255,255,255,.45)">
+          <h3>NORTH AMERICA</h3>
+          <ul>
+            <li>988 Suicide &amp; Crisis Lifeline (US) — call or text 988</li>
+            <li>Crisis Services Canada — 1-833-456-4566</li>
+          </ul>
+        </div>
+
+        <div class="card" style="box-shadow:none; background:rgba(255,255,255,.45)">
+          <h3>LATIN AMERICA</h3>
+          <ul>
+            <li>ASFUSA (Argentina) — (011) 5275-1135</li>
+            <li>CVV (Brazil) — 188</li>
+            <li>SAPTEL (Mexico) — 55 5259-8121</li>
+          </ul>
+        </div>
+
+        <div class="card" style="box-shadow:none; background:rgba(255,255,255,.45)">
+          <h3>EUROPE</h3>
+          <ul>
+            <li>Samaritans (UK/IE) — 116 123</li>
+            <li>Telefonul Vietii (Romania) — 0800 801 200</li>
+            <li>TelefonSeelsorge (Germany) — 0800 111 0 111</li>
+          </ul>
+        </div>
+
+        <div class="card" style="box-shadow:none; background:rgba(255,255,255,.45)">
+          <h3>AFRICA</h3>
+          <ul>
+            <li>SADAG (South Africa) — 0800 21 22 23</li>
+            <li>Befrienders Kenya — +254 722 178 177</li>
+          </ul>
+        </div>
+
+        <div class="card" style="box-shadow:none; background:rgba(255,255,255,.45)">
+          <h3>SOUTH / SOUTHEAST ASIA</h3>
+          <ul>
+            <li>iCall (India) — 9152987821</li>
+            <li>Vandrevala Foundation (India) — 1860-2662-345</li>
+            <li>Befrienders KL (Malaysia) — 03-7627 2929</li>
+          </ul>
+        </div>
+
+        <div class="card" style="box-shadow:none; background:rgba(255,255,255,.45)">
+          <h3>MIDDLE EAST</h3>
+          <ul>
+            <li>IDRAAC (Lebanon) — 01 564 961</li>
+            <li>Befrienders Cairo (Egypt) — 762 1602 / 762 0300</li>
+          </ul>
+        </div>
+
+        <div class="card" style="box-shadow:none; background:rgba(255,255,255,.45)">
+          <h3>PACIFIC</h3>
+          <ul>
+            <li>Lifeline Australia — 13 11 14</li>
+            <li>Lifeline New Zealand — 0800 543 354</li>
+          </ul>
+        </div>
+      </div>
+
+      <p class="note" id="resourcesSoon"></p>
+    </div>
+  </section>
+
+  <footer class="reveal" aria-label="About this project">
+    <h3>About this project</h3>
+    <p><strong>Purpose:</strong> This is a free, research-backed mental wellness tool designed for global access.</p>
+    <p><strong>Data statement:</strong> All survey data is anonymous and used only for academic research to improve this tool.</p>
+    <p><a href="https://www.who.int/mental-health" target="_blank" rel="noopener noreferrer">WHO Mental Health</a></p>
+    <p>
+      <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener noreferrer" aria-label="Creative Commons BY-NC 4.0">
+        CC BY-NC 4.0
+      </a>
+    </p>
+  </footer>
+</main>
+
+<!-- Survey floating button -->
+<button class="surveyFab" id="surveyFab" type="button" aria-haspopup="dialog" aria-controls="surveyDrawer" aria-expanded="false">
+  <span data-i18n="survey.fab">Survey</span>
+</button>
+
+<!-- Survey drawer -->
+<div class="drawerBackdrop" id="drawerBackdrop" aria-hidden="true"></div>
+<section class="drawer" id="surveyDrawer" role="dialog" aria-modal="true" aria-label="Survey">
+  <div class="drawerHeader">
+    <strong data-i18n="survey.drawerTitle">Post-session survey</strong>
+    <button type="button" id="drawerClose" aria-label="Close survey" data-i18n="survey.close">Close</button>
+  </div>
+  <div class="drawerBody">
+    <!-- REPLACE: Paste your survey Google Form *embed* URL here (see instructions below) -->
+    <iframe id="surveyFrame" title="Survey" loading="lazy"
+            src="about:blank"></iframe>
+  </div>
+  <div style="padding:10px 12px; border-top:1px solid var(--line); background:rgba(255,255,255,.35)">
+    <div class="note" data-i18n="survey.drawerNote">Thank you — your response helps this reach more people around the world.</div>
+  </div>
+</section>
+
+<div class="timer" id="timer" aria-label="Session engagement timer">You've been here: 0:00</div>
+
+<div class="consent" id="consent" role="region" aria-label="Consent acknowledgment banner">
+  <div class="row">
+    <p id="consentText">
+      This page collects anonymous usage data for mental health research. No personal information is stored. By continuing, you acknowledge this.
+    </p>
+    <button class="primary" type="button" id="consentBtn" aria-label="Acknowledge consent">Got it</button>
+  </div>
+</div>
+
+<script>
+/* ---------------------------
+   i18n (required sections)
+---------------------------- */
+const I18N = {
+  en: {
+    "lang.label":"Language",
+    "hero.title":"Welcome home to this safe space",
+    "hero.subtitle":"If today feels heavy, you don’t have to carry it alone. Take one minute—breathe, write, read something kind, and leave with a little more steadiness.",
+    "hero.pill1":"No account","hero.pill2":"Mobile-friendly","hero.pill3":"Offline-ready","hero.pill4":"Science-backed",
+    "hero.cta1":"Start with breathing","hero.cta2":"Write for 2 minutes","hero.cta3":"Read human words",
+    "science.title":"Why this works (science)",
+    "install.title":"Install this page","install.subtitle":"For quick access and offline use.","install.button":"Install",
+    "breath.title":"Box breathing (4–4–4–4)",
+    "breath.subtitle":"Breathe in for 4 seconds, hold for 4, breathe out for 4, hold for 4. Repeat for a minute.",
+    "breath.start":"Start","breath.pause":"Pause","breath.reset":"Reset",
+    "breath.phase.inhale":"Inhale","breath.phase.hold":"Hold","breath.phase.exhale":"Exhale",
+    "breath.hint":"Gentle shoulders. Soft jaw.",
+    "breath.kpi.in":"In 4","breath.kpi.hold":"Hold 4","breath.kpi.out":"Out 4",
+    "breath.note":"If you feel lightheaded, return to normal breathing and rest.",
+    "aff.title":"Affirmations","aff.subtitle":"Small, steady reminders. They rotate automatically, or you can choose.","aff.timer":"Auto-rotates every 8 seconds.",
+    "common.prev":"Previous","common.next":"Next",
+    "hum.title":"Words from Humans","hum.subtitle":"Anonymous, warm reminders—like a small hug from someone who gets it.","hum.add":"Add your own words","hum.note":"These are supportive peer-style messages, not medical advice.",
+    "survey.fab":"Survey",
+    "survey.drawerTitle":"Post-session survey",
+    "survey.close":"Close",
+    "survey.drawerNote":"Thank you — your response helps this reach more people around the world."
+  },
+  es: {
+    "lang.label":"Idioma",
+    "hero.title":"Bienvenido/a a este espacio seguro",
+    "hero.subtitle":"Si hoy se siente pesado, no tienes que cargarlo solo/a. Tómate un minuto: respira, escribe, lee algo amable y sal con un poco más de calma.",
+    "hero.pill1":"Sin cuenta","hero.pill2":"Para móvil","hero.pill3":"Funciona sin conexión","hero.pill4":"Basado en ciencia",
+    "hero.cta1":"Empieza respirando","hero.cta2":"Escribe 2 minutos","hero.cta3":"Lee palabras humanas",
+    "science.title":"Por qué funciona (ciencia)",
+    "install.title":"Instala esta página","install.subtitle":"Acceso rápido y uso sin conexión.","install.button":"Instalar",
+    "breath.title":"Respiración en caja (4–4–4–4)",
+    "breath.subtitle":"Inhala 4 segundos, sostén 4, exhala 4, sostén 4. Repite por un minuto.",
+    "breath.start":"Iniciar","breath.pause":"Pausar","breath.reset":"Reiniciar",
+    "breath.phase.inhale":"Inhala","breath.phase.hold":"Sostén","breath.phase.exhale":"Exhala",
+    "breath.hint":"Hombros suaves. Mandíbula relajada.",
+    "breath.kpi.in":"In 4","breath.kpi.hold":"Sostén 4","breath.kpi.out":"Out 4",
+    "breath.note":"Si te mareas, vuelve a respirar normal y descansa.",
+    "aff.title":"Afirmaciones","aff.subtitle":"Recordatorios pequeños y constantes. Rotan automáticamente o puedes elegir.","aff.timer":"Rota cada 8 segundos.",
+    "common.prev":"Anterior","common.next":"Siguiente",
+    "hum.title":"Palabras de personas","hum.subtitle":"Recordatorios anónimos y cálidos—como un abrazo pequeño de alguien que entiende.","hum.add":"Añade tus palabras","hum.note":"Son mensajes de apoyo entre pares, no consejo médico.",
+    "survey.fab":"Encuesta",
+    "survey.drawerTitle":"Encuesta posterior",
+    "survey.close":"Cerrar",
+    "survey.drawerNote":"Gracias — tu respuesta ayuda a que esto llegue a más personas en todo el mundo."
+  },
+  fr: {
+    "lang.label":"Langue",
+    "hero.title":"Bienvenue dans cet espace sûr",
+    "hero.subtitle":"Si aujourd’hui est lourd, tu n’as pas à porter ça seul(e). Prends une minute : respire, écris, lis quelque chose de doux, et repars un peu plus stable.",
+    "hero.pill1":"Sans compte","hero.pill2":"Mobile","hero.pill3":"Hors ligne","hero.pill4":"Appuyé par la science",
+    "hero.cta1":"Commencer par respirer","hero.cta2":"Écrire 2 minutes","hero.cta3":"Lire des mots humains",
+    "science.title":"Pourquoi ça marche (science)",
+    "install.title":"Installer cette page","install.subtitle":"Accès rapide et usage hors ligne.","install.button":"Installer",
+    "breath.title":"Respiration en carré (4–4–4–4)",
+    "breath.subtitle":"Inspire 4 s, retiens 4 s, expire 4 s, retiens 4 s. Répète une minute.",
+    "breath.start":"Démarrer","breath.pause":"Pause","breath.reset":"Réinitialiser",
+    "breath.phase.inhale":"Inspire","breath.phase.hold":"Retiens","breath.phase.exhale":"Expire",
+    "breath.hint":"Épaules souples. Mâchoire relâchée.",
+    "breath.kpi.in":"In 4","breath.kpi.hold":"Retiens 4","breath.kpi.out":"Out 4",
+    "breath.note":"Si tu te sens étourdi(e), reviens à une respiration normale et repose-toi.",
+    "aff.title":"Affirmations","aff.subtitle":"De petits rappels stables. Rotation automatique ou au choix.","aff.timer":"Rotation toutes les 8 secondes.",
+    "common.prev":"Précédent","common.next":"Suivant",
+    "hum.title":"Mots d’humains","hum.subtitle":"Rappels anonymes et chaleureux—comme un petit câlin de quelqu’un qui comprend.","hum.add":"Ajouter tes mots","hum.note":"Messages de soutien entre pairs, pas un avis médical.",
+    "survey.fab":"Sondage",
+    "survey.drawerTitle":"Questionnaire de fin",
+    "survey.close":"Fermer",
+    "survey.drawerNote":"Merci — ta réponse aide cet outil à atteindre plus de personnes dans le monde."
+  },
+  pt: {
+    "lang.label":"Idioma",
+    "hero.title":"Bem-vindo(a) a este espaço seguro",
+    "hero.subtitle":"Se hoje está pesado, você não precisa carregar isso sozinho(a). Tire um minuto: respire, escreva, leia algo gentil e saia com um pouco mais de firmeza.",
+    "hero.pill1":"Sem conta","hero.pill2":"Para celular","hero.pill3":"Funciona offline","hero.pill4":"Baseado em ciência",
+    "hero.cta1":"Começar com a respiração","hero.cta2":"Escrever por 2 minutos","hero.cta3":"Ler palavras humanas",
+    "science.title":"Por que funciona (ciência)",
+    "install.title":"Instalar esta página","install.subtitle":"Acesso rápido e uso offline.","install.button":"Instalar",
+    "breath.title":"Respiração em caixa (4–4–4–4)",
+    "breath.subtitle":"Inspire 4 s, segure 4 s, expire 4 s, segure 4 s. Repita por um minuto.",
+    "breath.start":"Iniciar","breath.pause":"Pausar","breath.reset":"Redefinir",
+    "breath.phase.inhale":"Inspire","breath.phase.hold":"Segure","breath.phase.exhale":"Expire",
+    "breath.hint":"Ombros leves. Mandíbula relaxada.",
+    "breath.kpi.in":"In 4","breath.kpi.hold":"Segure 4","breath.kpi.out":"Out 4",
+    "breath.note":"Se sentir tontura, volte à respiração normal e descanse.",
+    "aff.title":"Afirmações","aff.subtitle":"Lembretes pequenos e constantes. Rotaciona automaticamente ou você escolhe.","aff.timer":"Rotaciona a cada 8 segundos.",
+    "common.prev":"Anterior","common.next":"Próxima",
+    "hum.title":"Palavras de pessoas","hum.subtitle":"Lembretes anônimos e acolhedores—como um abraço de quem entende.","hum.add":"Adicionar suas palavras","hum.note":"Mensagens de apoio entre pares, não é aconselhamento médico.",
+    "survey.fab":"Pesquisa",
+    "survey.drawerTitle":"Pesquisa pós-sessão",
+    "survey.close":"Fechar",
+    "survey.drawerNote":"Obrigado(a) — sua resposta ajuda isto a alcançar mais pessoas ao redor do mundo."
+  },
+  ar: {
+    "lang.label":"اللغة",
+    "hero.title":"أهلًا بك في هذا المكان الآمن",
+    "hero.subtitle":"إن كان اليوم ثقيلًا، لست مضطرًا لحمله وحدك. خذ دقيقة: تنفّس، اكتب، اقرأ كلمة لطيفة، وانهض بثبات أكبر قليلًا.",
+    "hero.pill1":"بدون حساب","hero.pill2":"مناسب للجوال","hero.pill3":"يعمل دون اتصال","hero.pill4":"مدعوم علميًا",
+    "hero.cta1":"ابدأ بالتنفّس","hero.cta2":"اكتب لدقيقتين","hero.cta3":"اقرأ كلمات بشرية",
+    "science.title":"لماذا ينجح (علميًا)",
+    "install.title":"ثبّت هذه الصفحة","install.subtitle":"لوصول سريع واستخدام دون اتصال.","install.button":"تثبيت",
+    "breath.title":"تنفّس المربّع (4–4–4–4)",
+    "breath.subtitle":"شهيق 4 ثوانٍ، حبس 4، زفير 4، حبس 4. كرّر لدقيقة.",
+    "breath.start":"ابدأ","breath.pause":"إيقاف مؤقت","breath.reset":"إعادة ضبط",
+    "breath.phase.inhale":"شهيق","breath.phase.hold":"حبس","breath.phase.exhale":"زفير",
+    "breath.hint":"كتفان مرتاحان. فكّ لين.",
+    "breath.kpi.in":"In 4","breath.kpi.hold":"حبس 4","breath.kpi.out":"Out 4",
+    "breath.note":"إن شعرت بدوخة، عد إلى تنفّس طبيعي واسترح.",
+    "aff.title":"تأكيدات","aff.subtitle":"تذكيرات صغيرة وثابتة. تتبدّل تلقائيًا أو يمكنك الاختيار.","aff.timer":"تتبدّل كل 8 ثوانٍ.",
+    "common.prev":"السابق","common.next":"التالي",
+    "hum.title":"كلمات من بشر","hum.subtitle":"تذكيرات دافئة ومجهولة—كعناق صغير ممن يفهمك.","hum.add":"أضف كلماتك","hum.note":"هذه رسائل دعم بين الأقران وليست نصيحة طبية.",
+    "survey.fab":"استبيان",
+    "survey.drawerTitle":"استبيان بعد الجلسة",
+    "survey.close":"إغلاق",
+    "survey.drawerNote":"شكرًا — إجابتك تساعد هذا في الوصول لعدد أكبر من الناس حول العالم."
+  },
+  hi: {
+    "lang.label":"भाषा",
+    "hero.title":"इस सुरक्षित जगह में आपका स्वागत है",
+    "hero.subtitle":"अगर आज भारी लग रहा है, तो आपको इसे अकेले नहीं उठाना है। एक मिनट लें—सांस लें, लिखें, कोई दयालु बात पढ़ें, और थोड़ा अधिक स्थिर महसूस करें।",
+    "hero.pill1":"कोई अकाउंट नहीं","hero.pill2":"मोबाइल-फ्रेंडली","hero.pill3":"ऑफलाइन-रेडी","hero.pill4":"विज्ञान-आधारित",
+    "hero.cta1":"सांस से शुरू करें","hero.cta2":"2 मिनट लिखें","hero.cta3":"मानवीय शब्द पढ़ें",
+    "science.title":"यह क्यों काम करता है (विज्ञान)",
+    "install.title":"यह पेज इंस्टॉल करें","install.subtitle":"तेज़ पहुँच और ऑफलाइन उपयोग के लिए।","install.button":"इंस्टॉल",
+    "breath.title":"बॉक्स ब्रीदिंग (4–4–4–4)",
+    "breath.subtitle":"4 सेकंड सांस अंदर, 4 रोकें, 4 बाहर, 4 रोकें। एक मिनट तक दोहराएँ।",
+    "breath.start":"शुरू","breath.pause":"रोकें","breath.reset":"रीसेट",
+    "breath.phase.inhale":"सांस अंदर","breath.phase.hold":"रोकें","breath.phase.exhale":"सांस बाहर",
+    "breath.hint":"कंधे नरम। जबड़ा ढीला।",
+    "breath.kpi.in":"In 4","breath.kpi.hold":"रोकें 4","breath.kpi.out":"Out 4",
+    "breath.note":"अगर चक्कर लगे, तो सामान्य सांस लें और आराम करें।",
+    "aff.title":"अफ़र्मेशन्स","aff.subtitle":"छोटे, स्थिर याद दिलाने वाले वाक्य। अपने आप बदलते हैं या आप चुन सकते हैं।","aff.timer":"हर 8 सेकंड में बदलता है।",
+    "common.prev":"पिछला","common.next":"अगला",
+    "hum.title":"लोगों के शब्द","hum.subtitle":"अनाम, गर्मजोशी भरे संदेश—जैसे किसी समझने वाले का छोटा सा आलिंगन।","hum.add":"अपने शब्द जोड़ें","hum.note":"ये सहारा देने वाले संदेश हैं, चिकित्सकीय सलाह नहीं।",
+    "survey.fab":"सर्वे",
+    "survey.drawerTitle":"सेशन के बाद सर्वे",
+    "survey.close":"बंद करें",
+    "survey.drawerNote":"धन्यवाद — आपका जवाब इसे दुनिया भर में और लोगों तक पहुँचाने में मदद करता है।"
+  }
+};
+
+function t(lang, key){
+  return (I18N[lang] && I18N[lang][key]) || I18N.en[key] || key;
+}
+
+/* ---------------------------
+   Translated affirmations (15)
+---------------------------- */
+const AFFIRMATIONS = {
+  en: [
+    "You are still worthy, still enough.",
+    "You don’t have to have everything figured out to belong.",
+    "One small step counts. Today counts.",
+    "Your feelings are real—and they can change.",
+    "You can be tired and still be brave.",
+    "Breathe. Soften. Begin again.",
+    "You are allowed to ask for help.",
+    "You have survived hard days before.",
+    "You are not behind. You are becoming.",
+    "Even now, you are learning to care for yourself.",
+    "Your pace is valid.",
+    "You deserve gentleness—especially from you.",
+    "This moment is not your whole story.",
+    "You can rest without earning it.",
+    "You already belong."
+  ],
+  es: [
+    "Sigues siendo valioso/a, sigues siendo suficiente.",
+    "No tienes que tenerlo todo resuelto para pertenecer.",
+    "Un paso pequeño cuenta. Hoy cuenta.",
+    "Tus emociones son reales—y pueden cambiar.",
+    "Puedes estar cansado/a y aun así ser valiente.",
+    "Respira. Suelta. Empieza de nuevo.",
+    "Tienes derecho a pedir ayuda.",
+    "Ya has sobrevivido días difíciles.",
+    "No vas tarde. Estás creciendo.",
+    "Incluso ahora, estás aprendiendo a cuidarte.",
+    "Tu ritmo es válido.",
+    "Mereces ternura—especialmente de ti.",
+    "Este momento no es toda tu historia.",
+    "Puedes descansar sin ganártelo.",
+    "Ya perteneces."
+  ],
+  fr: [
+    "Tu as de la valeur, tu es suffisant(e).",
+    "Tu n’as pas besoin d’avoir tout compris pour appartenir.",
+    "Un petit pas compte. Aujourd’hui compte.",
+    "Tes émotions sont réelles—et elles peuvent changer.",
+    "Tu peux être fatigué(e) et courageux(se).",
+    "Respire. Relâche. Recommence.",
+    "Tu as le droit de demander de l’aide.",
+    "Tu as déjà traversé des jours difficiles.",
+    "Tu n’es pas en retard. Tu deviens.",
+    "Même maintenant, tu apprends à prendre soin de toi.",
+    "Ton rythme est légitime.",
+    "Tu mérites de la douceur—surtout de toi.",
+    "Ce moment n’est pas toute ton histoire.",
+    "Tu peux te reposer sans le mériter.",
+    "Tu as déjà ta place."
+  ],
+  pt: [
+    "Você continua valioso(a), continua sendo suficiente.",
+    "Você não precisa ter tudo resolvido para pertencer.",
+    "Um passo pequeno conta. Hoje conta.",
+    "Seus sentimentos são reais—e podem mudar.",
+    "Você pode estar cansado(a) e ainda ser corajoso(a).",
+    "Respire. Suavize. Recomece.",
+    "Você pode pedir ajuda.",
+    "Você já passou por dias difíceis antes.",
+    "Você não está atrasado(a). Você está se tornando.",
+    "Mesmo agora, você está aprendendo a cuidar de si.",
+    "Seu ritmo é válido.",
+    "Você merece gentileza—principalmente de você.",
+    "Este momento não é sua história inteira.",
+    "Você pode descansar sem “merecer”.",
+    "Você já pertence."
+  ],
+  ar: [
+    "ما زلتَ/ما زلتِ جديرًا، وما زلتَ/ما زلتِ كافيًا.",
+    "لا يلزم أن تكون كل الأمور واضحة كي تنتمي.",
+    "خطوة صغيرة تُحتسب. اليوم يُحتسب.",
+    "مشاعرك حقيقية—ويمكن أن تتغيّر.",
+    "يمكنك أن تكون مُتعبًا ومع ذلك شجاعًا.",
+    "تنفّس. ليّن. ابدأ من جديد.",
+    "يحقّ لك طلب المساعدة.",
+    "لقد تجاوزتَ أيامًا صعبة من قبل.",
+    "لستَ متأخرًا. أنت تتشكّل وتكبر.",
+    "حتى الآن، أنت تتعلم كيف تعتني بنفسك.",
+    "وتيرتك مُعتبَرة.",
+    "أنت تستحق اللطف—وخاصة من نفسك.",
+    "هذه اللحظة ليست قصتك كلها.",
+    "يمكنك أن ترتاح دون أن “تستحق”.",
+    "أنت تنتمي بالفعل."
+  ],
+  hi: [
+    "आप अब भी योग्य हैं, अब भी पर्याप्त हैं।",
+    "यह ज़रूरी नहीं कि सब कुछ समझ में आ जाए तभी आप ‘अपनापन’ महसूस करें।",
+    "एक छोटा कदम भी मायने रखता है। आज मायने रखता है।",
+    "आपकी भावनाएँ सच हैं—और बदल सकती हैं।",
+    "आप थके हुए हो सकते हैं और फिर भी बहादुर।",
+    "सांस लें। ढीला छोड़ें। फिर से शुरू करें।",
+    "आप मदद माँग सकते हैं।",
+    "आप पहले भी मुश्किल दिन पार कर चुके हैं।",
+    "आप पीछे नहीं हैं। आप बन रहे हैं।",
+    "अभी भी, आप खुद का ख्याल रखना सीख रहे हैं।",
+    "आपकी गति सही है।",
+    "आप कोमलता के हक़दार हैं—खासकर अपने आप से।",
+    "यह पल आपकी पूरी कहानी नहीं है।",
+    "आप बिना ‘कमाए’ भी आराम कर सकते हैं।",
+    "आप पहले से ही यहाँ के हैं।"
+  ]
+};
+
+/* ---------------------------
+   Rotating journaling prompts (7)
+---------------------------- */
+const PROMPTS = [
+  "Sensory grounding: write 5 things you can see, 4 you can feel, 3 you can hear, 2 you can touch, 1 you can taste.",
+  "No matter how small—what made you smile today?",
+  "‘Not now’ list: write your worries. Which ones can you postpone for later?",
+  "What’s your biggest stressor? What can you control right now, even a little?",
+  "Write a kind sentence to your younger self.",
+  "Name one thing you’re proud of surviving, and one thing you want to protect today.",
+  "If a friend felt what you feel, what would you tell them—word for word?"
+];
+
+/* ---------------------------
+   Words from Humans (12)
+---------------------------- */
+const HUMAN_WORDS = [
+  { msg:"I’m in Mexico City and I promise—some days are just about getting through the next hour. That still counts as courage.", from:"— someone in Latin America" },
+  { msg:"From Nairobi: you don’t have to be ‘strong’ every minute. Let yourself be held by small things—tea, a window, one good breath.", from:"— someone in Africa" },
+  { msg:"I’m in South Asia and I grew up hearing ‘be tough.’ I’m learning a new kind of tough: being gentle with myself.", from:"— anonymous" },
+  { msg:"From the Middle East: even in noisy seasons, you can make a quiet corner inside you. It’s yours.", from:"— anonymous" },
+  { msg:"If you’re reading this, you showed up. That’s not nothing. That’s a beginning.", from:"— anonymous" },
+  { msg:"You’re not behind. Life isn’t a race. Some chapters are just slower—and still meaningful.", from:"— anonymous" },
+  { msg:"I don’t know your story, but I believe you. Whatever you’re carrying is real.", from:"— anonymous" },
+  { msg:"Today might be messy. You can still treat yourself like someone you love.", from:"— anonymous" },
+  { msg:"Sometimes the bravest thing is choosing one small next step, not a big solution.", from:"— anonymous" },
+  { msg:"If your mind is loud, try one soft thing: loosen your jaw, drop your shoulders, exhale longer.", from:"— anonymous" },
+  { msg:"You are allowed to rest. Rest is part of healing, not a reward for finishing.", from:"— anonymous" },
+  { msg:"Wherever you are in the world—someone has felt this too, and it did shift. It can shift for you.", from:"— anonymous" }
+];
+
+/* ---------------------------
+   Helpers
+---------------------------- */
+const $ = (sel, root=document) => root.querySelector(sel);
+const $$ = (sel, root=document) => [...root.querySelectorAll(sel)];
+
+function applyLang(lang){
+  document.documentElement.lang = lang === "ar" ? "ar" : lang;
+  document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
+  $("#langLabel").textContent = t(lang, "lang.label");
+  $$("[data-i18n]").forEach(el=>{
+    const key = el.getAttribute("data-i18n");
+    el.textContent = t(lang, key);
+  });
+  affList = AFFIRMATIONS[lang] || AFFIRMATIONS.en;
+  setAff(affIndex);
+  const soon = {
+    en:"",
+    es:"Traducción completa próximamente.",
+    fr:"Traduction complète bientôt disponible.",
+    pt:"Tradução completa em breve.",
+    ar:"الترجمة الكاملة قريبًا.",
+    hi:"पूर्ण अनुवाद जल्द आ रहा है।"
+  }[lang] || "";
+  $("#soonNote").textContent = soon && lang !== "en" ? soon : "";
+  $("#resourcesSoon").textContent = soon && lang !== "en" ? soon : "";
+  document.body.style.textAlign = (lang === "ar") ? "right" : "";
+}
+
+/* ---------------------------
+   Scroll reveals
+---------------------------- */
+(function(){
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target); }
+    });
+  }, {threshold: .12});
+  $$(".reveal").forEach(el=>io.observe(el));
+})();
+
+/* ---------------------------
+   Session timer (user visible only)
+---------------------------- */
+(function(){
+  const start = Date.now();
+  const el = $("#timer");
+  function tick(){
+    const s = Math.floor((Date.now()-start)/1000);
+    const m = Math.floor(s/60);
+    const r = String(s%60).padStart(2,"0");
+    el.textContent = `You've been here: ${m}:${r}`;
+  }
+  tick();
+  setInterval(tick, 1000);
+})();
+
+/* ---------------------------
+   Consent banner (localStorage)
+---------------------------- */
+(function(){
+  const key="mw_consent_ack_v1";
+  const bar=$("#consent");
+  const btn=$("#consentBtn");
+  if(!localStorage.getItem(key)){
+    bar.style.display="grid";
+    btn.addEventListener("click", ()=>{
+      localStorage.setItem(key,"1");
+      bar.style.display="none";
+    }, {once:true});
+  }
+})();
+
+/* ---------------------------
+   Breathing (4-4-4-4)
+---------------------------- */
+let breathRunning=false;
+let breathTimer=null;
+let phaseIdx=0;
+let phaseLeft=4;
+const boxAnim = $("#boxAnim");
+const phaseLabel = $("#phaseLabel");
+const phaseCount = $("#phaseCount");
+const breathToggle = $("#breathToggle");
+
+function breathPhaseKey(idx){
+  return idx===0 ? "breath.phase.inhale" : idx===2 ? "breath.phase.exhale" : "breath.phase.hold";
+}
+function breathTick(){
+  const lang = $("#langSel").value;
+  phaseLabel.textContent = t(lang, breathPhaseKey(phaseIdx));
+  phaseCount.textContent = String(phaseLeft);
+  phaseLeft--;
+  if(phaseLeft <= 0){
+    phaseIdx = (phaseIdx + 1) % 4;
+    phaseLeft = 4;
+  }
+}
+function setBreathRunning(on){
+  breathRunning = on;
+  boxAnim.style.animationPlayState = on ? "running" : "paused";
+  const lang = $("#langSel").value;
+  breathToggle.textContent = on ? t(lang, "breath.pause") : t(lang, "breath.start");
+}
+$("#breathToggle").addEventListener("click", ()=>{
+  if(!breathRunning){
+    setBreathRunning(true);
+    breathTick();
+    breathTimer = setInterval(breathTick, 1000);
+  }else{
+    setBreathRunning(false);
+    clearInterval(breathTimer);
+    breathTimer=null;
+  }
+});
+$("#breathReset").addEventListener("click", ()=>{
+  clearInterval(breathTimer); breathTimer=null;
+  phaseIdx=0; phaseLeft=4;
+  setBreathRunning(false);
+  breathTick();
+});
+breathTick();
+
+/* ---------------------------
+   Affirmations carousel
+---------------------------- */
+let affIndex=0;
+let affList = AFFIRMATIONS.en;
+let affAuto=null;
+function setAff(i){
+  const list=affList;
+  const idx = (i+list.length)%list.length;
+  affIndex = idx;
+  $("#affText").textContent = list[idx];
+  $("#affMeta").textContent = `${idx+1} / ${list.length}`;
+}
+function affNext(){ setAff(affIndex+1); }
+function affPrev(){ setAff(affIndex-1); }
+$("#affNext").addEventListener("click", ()=>{ affNext(); restartAffAuto(); });
+$("#affPrev").addEventListener("click", ()=>{ affPrev(); restartAffAuto(); });
+function restartAffAuto(){
+  if(affAuto) clearInterval(affAuto);
+  affAuto = setInterval(affNext, 8000);
+}
+setAff(0);
+restartAffAuto();
+
+/* ---------------------------
+   Words from Humans rotation
+---------------------------- */
+let humIndex=0;
+function setHum(i){
+  humIndex = (i+HUMAN_WORDS.length)%HUMAN_WORDS.length;
+  const item = HUMAN_WORDS[humIndex];
+  $("#humanMsg").textContent = item.msg;
+  $("#humanFrom").textContent = item.from;
+}
+$("#humNext").addEventListener("click", ()=>setHum(humIndex+1));
+$("#humPrev").addEventListener("click", ()=>setHum(humIndex-1));
+setHum(0);
+setInterval(()=>setHum(humIndex+1), 10000);
+
+/* ---------------------------
+   Journaling prompt by day-of-week
+---------------------------- */
+(function(){
+  const idx = new Date().getDay();
+  $("#promptText").textContent = PROMPTS[idx] || PROMPTS[0];
+})();
+
+/* ---------------------------
+   Survey drawer (embed)
+---------------------------- */
+const surveyFab = $("#surveyFab");
+const drawer = $("#surveyDrawer");
+const backdrop = $("#drawerBackdrop");
+const closeBtn = $("#drawerClose");
+const frame = $("#surveyFrame");
+
+// REPLACE: Put your Google Form embed URL here once you have it
+// Tip: In Google Forms -> Send -> <> Embed HTML -> copy the iframe src URL
+const SURVEY_EMBED_URL = "about:blank"; // <!-- REPLACE: survey embed URL -->
+
+function openDrawer(){
+  drawer.style.display = "block";
+  backdrop.style.display = "block";
+  surveyFab.setAttribute("aria-expanded", "true");
+  backdrop.setAttribute("aria-hidden","false");
+  if(frame.src === "about:blank" && SURVEY_EMBED_URL !== "about:blank"){
+    frame.src = SURVEY_EMBED_URL;
+  }
+  closeBtn.focus();
+}
+function closeDrawer(){
+  drawer.style.display = "none";
+  backdrop.style.display = "none";
+  surveyFab.setAttribute("aria-expanded", "false");
+  backdrop.setAttribute("aria-hidden","true");
+  surveyFab.focus();
+}
+surveyFab.addEventListener("click", openDrawer);
+closeBtn.addEventListener("click", closeDrawer);
+backdrop.addEventListener("click", closeDrawer);
+window.addEventListener("keydown", (e)=>{
+  if(e.key === "Escape" && drawer.style.display === "block") closeDrawer();
+});
+
+/* ---------------------------
+   Language toggle
+---------------------------- */
+const langSel = $("#langSel");
+const savedLang = localStorage.getItem("mw_lang_v1");
+if(savedLang && I18N[savedLang]) langSel.value=savedLang;
+applyLang(langSel.value);
+langSel.addEventListener("change", ()=>{
+  const lang = langSel.value;
+  localStorage.setItem("mw_lang_v1", lang);
+  applyLang(lang);
+  breathTick();
+});
+
+/* ---------------------------
+   PWA: manifest + service worker (best-effort single-file)
+---------------------------- */
+(function(){
+  const iconSvg = encodeURIComponent(
+`<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#6f7f73"/>
+      <stop offset="1" stop-color="#9b7b86"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="96" fill="#f6f0e7"/>
+  <circle cx="172" cy="190" r="92" fill="url(#g)" opacity=".25"/>
+  <circle cx="334" cy="320" r="116" fill="url(#g)" opacity=".22"/>
+  <path d="M150 310c18-56 56-90 110-90 58 0 94 34 108 90" fill="none" stroke="#2b2a28" stroke-width="18" stroke-linecap="round" opacity=".65"/>
+  <text x="256" y="285" text-anchor="middle" font-family="DM Sans, Arial" font-size="46" fill="#2b2a28" opacity=".86">Moody</text>
+</svg>`
+  );
+  const manifest = {
+    name: "Moody — a small reset",
+    short_name: "Moody",
+    start_url: "./",
+    scope: "./",
+    display: "standalone",
+    background_color: "#f6f0e7",
+    theme_color: "#6f7f73",
+    icons: [
+      { src: "data:image/svg+xml;charset=utf-8," + iconSvg, sizes: "512x512", type: "image/svg+xml", purpose: "any" }
+    ]
+  };
+  const manifestUrl = URL.createObjectURL(new Blob([JSON.stringify(manifest)], {type:"application/manifest+json"}));
+  $("#manifestLink").setAttribute("href", manifestUrl);
+
+  if("serviceWorker" in navigator){
+    const swCode = `
+      const CACHE = "moody-cache-v1";
+      self.addEventListener("install", (e) => {
+        e.waitUntil((async () => {
+          const cache = await caches.open(CACHE);
+          await cache.addAll(["./"]);
+          self.skipWaiting();
+        })());
+      });
+      self.addEventListener("activate", (e) => {
+        e.waitUntil((async () => {
+          const keys = await caches.keys();
+          await Promise.all(keys.map(k => (k === CACHE) ? null : caches.delete(k)));
+          self.clients.claim();
+        })());
+      });
+      self.addEventListener("fetch", (e) => {
+        const req = e.request;
+        if(req.method !== "GET") return;
+        e.respondWith((async () => {
+          const cache = await caches.open(CACHE);
+          const cached = await cache.match(req, {ignoreSearch:true});
+          if(cached) return cached;
+          try{
+            const fresh = await fetch(req);
+            const url = new URL(req.url);
+            if(url.origin === location.origin){
+              cache.put(req, fresh.clone());
+            }
+            return fresh;
+          }catch(err){
+            const fallback = await cache.match("./");
+            return fallback || new Response("Offline. Please reconnect and refresh.", {status: 200, headers: {"Content-Type":"text/plain"}});
+          }
+        })());
+      });
+    `.trim();
+    try{
+      const swUrl = URL.createObjectURL(new Blob([swCode], {type:"text/javascript"}));
+      navigator.serviceWorker.register(swUrl).catch(()=>{});
+    }catch(e){}
+  }
+})();
+
+/* ---------------------------
+   Install prompt
+---------------------------- */
+let deferredPrompt = null;
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  $("#installBox").style.display = "flex";
+});
+$("#installBtn").addEventListener("click", async ()=>{
+  if(!deferredPrompt) return;
+  deferredPrompt.prompt();
+  try{ await deferredPrompt.userChoice; }catch(e){}
+  deferredPrompt = null;
+  $("#installBox").style.display = "none";
+});
+</script>
+
+<script>
+(function(){
+  const POST_URL = "https://script.google.com/macros/s/AKfycbz4Gv2332MSzU-I_hAbI4DIKugcH30GyXivpb5h6-EuUgvUJpsMAJFlXDg5Hepu-NGK/exec";
+
+  const surveyForm =
+    document.querySelector("form#surveyForm") ||
+    document.querySelector("form[data-survey-form]") ||
+    document.querySelector("form[name='survey']") ||
+    null;
+
+  if(!surveyForm) return;
+
+  function readScale(name){
+    const checked = surveyForm.querySelector(`input[type="radio"][name="${name}"]:checked`);
+    if(checked) return Number(checked.value);
+    const sel = surveyForm.querySelector(`select[name="${name}"]`);
+    if(sel && sel.value) return Number(sel.value);
+    const inp = surveyForm.querySelector(`input[name="${name}"]`);
+    if(inp && inp.value) return Number(inp.value);
+    return null;
+  }
+
+  function selectedPillText(groupName){
+    const pressed = surveyForm.querySelector(`[data-pill-group="${groupName}"] [aria-pressed="true"]`);
+    if(pressed) return (pressed.textContent || "").trim();
+    const selected = surveyForm.querySelector(`[data-pill-group="${groupName}"] .selected`);
+    if(selected) return (selected.textContent || "").trim();
+    const checked = surveyForm.querySelector(`[data-pill-group="${groupName}"] input[type="radio"]:checked`);
+    if(checked){
+      const lbl = surveyForm.querySelector(`label[for="${CSS.escape(checked.id)}"]`);
+      return lbl ? (lbl.textContent || "").trim() : (checked.value || "").trim();
+    }
+    return null;
+  }
+
+  function showMessage(text){
+    let msg = document.getElementById("surveyStatusMessage");
+    if(!msg){
+      msg = document.createElement("div");
+      msg.id = "surveyStatusMessage";
+      msg.setAttribute("role","status");
+      msg.setAttribute("aria-live","polite");
+      surveyForm.insertAdjacentElement("afterend", msg);
+    }
+    msg.textContent = text;
+  }
+
+  surveyForm.addEventListener("submit", async (e)=>{
+    e.preventDefault();
+
+    const data = {
+      q1_before: readScale("q1_before"),
+      q2_after: readScale("q2_after"),
+      q3_feature: selectedPillText("feature"),
+      q4_source: selectedPillText("source"),
+      q5_intent: selectedPillText("intent")
+    };
+
+    try{
+      await fetch(POST_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(data)
+      });
+
+      surveyForm.style.display = "none";
+      showMessage("Thank you — every response helps this reach someone who needs it. 🌱");
+    }catch(err){
+      showMessage("Something went wrong — please try again.");
+      surveyForm.style.display = "";
+    }
+  });
+})();
+</script>
+</body>
+</html>
